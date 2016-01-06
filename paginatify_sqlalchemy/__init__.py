@@ -15,3 +15,7 @@ class QueryWrapper(object):
 class Pagination(_Pagination):
     def __init__(self, query, **kwargs):
         super(Pagination, self).__init__(QueryWrapper(query), **kwargs)
+
+
+# to prevent naming convention
+SQLPagination = Pagination
