@@ -1,4 +1,7 @@
-from paginatify import Pagination as _Pagination
+from typing import TypeVar, Callable
+
+from paginatify import NavigationBase, Pagination, paginatify as _paginatify
+from sqlalchemy.orm import Query
 
 
 class QueryWrapper(object):
@@ -12,10 +15,10 @@ class QueryWrapper(object):
         return self.query.__getitem__(item)
 
 
-class Pagination(_Pagination):
-    def __init__(self, query, **kwargs):
-        super(Pagination, self).__init__(QueryWrapper(query), **kwargs)
+T = TypeVar('T')
+U = TypeVar('U')
 
 
-# to prevent naming convention
-SQLPagination = Pagination
+def paginatify(query: Query, page=1, per_page=10, per_nav=10, base: NavigationBase = NavigationBase.STANDARD,
+               map_: Callable[[T], U] = lambda x: x) -> Pagination[U]:
+    return _paginatify(QueryWrapper(query), page, per_page, per_nav, base, map_)

@@ -1,9 +1,9 @@
 from setuptools import setup
 
 setup(
-        name='paginatify-sqlalchemy',
-        version='0.0.1',
-        packages=['paginatify_sqlalchemy'],
-        zip_safe=False,
-        install_requires=['paginatify', 'sqlalchemy>=1.0.11']
+    name='coint-paginatify-sqlalchemy',
+    version='0.0.2',
+    packages=['paginatify_sqlalchemy'],
+    zip_safe=False,
+    install_requires=['coint-paginatify==0.0.5', 'sqlalchemy>=1.0.11']
 )

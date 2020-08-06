@@ -2,7 +2,7 @@ from sqlalchemy import create_engine, Column, Integer
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-from paginatify_sqlalchemy import Pagination
+from paginatify_sqlalchemy import paginatify
 
 engine = create_engine('sqlite://')
 Session = sessionmaker(bind=engine)
@@ -28,8 +28,7 @@ def paginate(count, page=1):
     session.add_all(items)
     try:
         session.flush()
-        pagination = Pagination(session.query(Item.id), page=page, per_page=3,
-                                per_nav=3, map_=first)
+        pagination = paginatify(session.query(Item.id), page=page, per_page=3, per_nav=3, map_=first)
         assert pagination.total == count
         return pagination
     finally:
