@@ -23,7 +23,9 @@ def paginate(count, page=1):
         return item[0]
 
     session = Session()
-    map(session.add, [Item() for _ in range(count)])
+    # keep reference to prevent garbage collected
+    items = [Item() for _ in range(count)]
+    session.add_all(items)
     try:
         session.flush()
         pagination = Pagination(session.query(Item.id), page=page, per_page=3,
@@ -41,5 +43,5 @@ def test_len():
 
 
 def test_getitem():
-    assert paginate(0).items == []
-    assert paginate(10, 2).items == [4, 5, 6]
+    assert paginate(0).items == tuple()
+    assert paginate(10, 2).items == (4, 5, 6)
