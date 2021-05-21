@@ -55,9 +55,9 @@ class NavigationBase(Enum):
 
 
 def paginatify(query: Sequence[T], page=1, per_page=10, per_nav=10, base: NavigationBase = NavigationBase.STANDARD,
-               map_: Callable[[T], U] = lambda x: x) -> Pagination[U]:
+               map_: Callable[[T], U] = lambda x: x, total_count_query: Callable[[], int] = None) -> Pagination[U]:
     first = 1
-    total = len(query)
+    total = total_count_query() if total_count_query else len(query)
     if total == 0:
         last = 1
     else:
@@ -83,7 +83,7 @@ def paginatify(query: Sequence[T], page=1, per_page=10, per_nav=10, base: Naviga
     pages = tuple(range(nav_head, nav_tail + 1))
 
     start = (page - 1) * per_page
-    items = tuple(map(map_, query[start: start + per_page]))
+    items = tuple(map(map_, query[start: min(total, start + per_page)]))
     items_indexed = tuple(zip(count(total - start, step=-1), items))
 
     return Pagination(

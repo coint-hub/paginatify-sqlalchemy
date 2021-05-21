@@ -84,7 +84,6 @@ def test_nav_tail():
     assert p.page == 11
     assert p.nav_tail == 11
 
-
     assert paginate_center(0).nav_tail == 1
 
     assert paginate_center(31, 1).nav_tail == 3
@@ -197,3 +196,15 @@ def test_items_indexed():
     assert paginate(31, 10).items_indexed == ((4, 28), (3, 29), (2, 30))
     assert paginate(31, 11).items_indexed == ((1, 31),)
     assert paginate(31, 12).items_indexed == ((1, 31),)
+
+
+def test_total_count_query():
+    # 기본 상태 확인
+    default = paginatify(tuple(range(10)))
+    assert default.total == 10, "10 개를 입력하면 10개 모두 한페이지에 출력 된다."
+    assert default.items == tuple(range(10)), "10 개를 입력하면 10개 모두 한페이지에 출력 된다."
+
+    # 하지만, total 쿼리를 별개로 준다면
+    modified = paginatify(tuple(range(10)), total_count_query=lambda: 3)
+    assert modified.total == 3, "10 개를 입력해도 3개 페이지로 간주한다."
+    assert modified.items == tuple(range(3)), "10 개를 입력해도 3개만 아이템으로 등장한다."
